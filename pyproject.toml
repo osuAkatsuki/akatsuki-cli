@@ -1,0 +1,21 @@
+[project]
+name = "akatsuki-cli"
+authors = [
+    {name = "Akatsuki Team", email = "support@akatsuki.gg"},
+]
+description = "A CLI interface for Akatsuki engineering"
+license = {text = "MIT"}
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.7"
+dynamic = ["version"]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+
+[project.scripts]
+akatsuki = "akatsuki_cli.__main__:main"
