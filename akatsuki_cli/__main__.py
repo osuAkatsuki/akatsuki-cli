@@ -1,31 +1,37 @@
 #!/usr/bin/env python3
 import argparse
+import logging
+
 from akatsuki_cli.commands import vault
 
 parser: argparse.ArgumentParser
 
 
-def handle_vault_command(args: argparse.Namespace) -> int:
+def handle_vault_command(args: argparse.Namespace) -> None:
     if args.subcommand == "get":
-        response = vault.get(args.service, args.environment, args.key)
-        print("vault get")
-    elif args.subcommand == "get-all":
-        print("vault get-all")
+        vault.get(args.service, args.environment, args.output_file)
     elif args.subcommand == "delete":
         print("vault delete")
     else:
         parser.print_help()
 
-    return 0
+    return None
 
 
 def handle_command(args: argparse.Namespace) -> int:
-    if args.command == "vault":
-        return handle_vault_command(args)
+    try:
+        if args.command == "vault":
+            handle_vault_command(args)
+        else:
+            parser.print_help()
+    except Exception:
+        logging.exception(
+            "Failed to execute command",
+            extra={"args": args},
+        )
+        return 1
     else:
-        parser.print_help()
-
-    return 0
+        return 0
 
 
 def main() -> int:
@@ -40,17 +46,11 @@ def main() -> int:
     vault_parser = subparsers.add_parser("vault")
     vault_subparsers = vault_parser.add_subparsers(dest="subcommand")
 
-    # $ akatsuki vault get <service> <environment> <key>
+    # $ akatsuki vault get <service> <environment> [-o <output-file>]
     vault_get_parser = vault_subparsers.add_parser("get")
     vault_get_parser.add_argument("service")
     vault_get_parser.add_argument("environment")
-    vault_get_parser.add_argument("key")
-
-    # $ akatsuki vault get-all <service> <environment> -o <output_file>
-    vault_get_all_parser = vault_subparsers.add_parser("get-all")
-    vault_get_all_parser.add_argument("service")
-    vault_get_all_parser.add_argument("environment")
-    vault_get_all_parser.add_argument("-o", "--output-file")
+    vault_get_parser.add_argument("-o", "--output-file")
 
     # TODO: what other vault subcommands would be useful? search? unseal?
 
