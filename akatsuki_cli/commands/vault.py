@@ -7,8 +7,8 @@ import hvac
 import os
 
 vault_client = hvac.Client(
-    url=os.environ["VAULT_ADDR"],
-    token=os.environ["VAULT_TOKEN"],
+    url=os.getenv("VAULT_ADDR", "http://localhost:8200"),
+    token=os.getenv("VAULT_TOKEN"),
 )
 
 
