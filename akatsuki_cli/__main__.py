@@ -27,7 +27,7 @@ def handle_command(args: argparse.Namespace) -> int:
     except Exception:
         logging.exception(
             "Failed to execute command",
-            extra={"args": args},
+            extra={"command_args": args},
         )
         return 1
     else:
